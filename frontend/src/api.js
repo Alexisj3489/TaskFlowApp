@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// URL actualizada apuntando a tu propio backend
-const API_URL = import.meta.env.VITE_API_URL || 'https://api.coronel.byronrm.com';
+// URL forzada a tu propio dominio único (Traefik se encargará del ruteo inteligente)
+const API_URL = 'https://coronel.byronrm.com';
 
 const api = axios.create({
   baseURL: API_URL,

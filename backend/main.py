@@ -19,7 +19,9 @@ DATABASE_URL = os.getenv(
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "https://coronel.byronrm.com").split(",")
+
+# Forzamos tu dominio único de producción para evitar fallos de CORS
+CORS_ORIGINS = ["https://coronel.byronrm.com"]
 
 # ========== DATABASE ==========
 engine = create_engine(DATABASE_URL)
@@ -143,7 +145,6 @@ app.add_middleware(
 
 # ========== ROUTES ==========
 
-# ¡AQUÍ ESTÁ LA SOLUCIÓN AL 404!
 @app.get("/")
 async def root():
     return {"mensaje": "¡Bienvenido a la API de TaskFlow! El backend está funcionando perfectamente."}
