@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   taskflow-api:
-    build: /opt/apps/taskflow-api
+    build:
+      context: /opt/apps/taskflow-api
+      dockerfile: Dockerfile
     container_name: taskflow-api
     restart: unless-stopped
     environment:
