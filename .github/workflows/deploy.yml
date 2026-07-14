@@ -75,29 +75,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_PASSWORD }}
-          port: ${{ secrets.VPS_SSH_PORT }}
-          script: |
-            echo "🚀 Iniciando despliegue..."
-            
-            # Backend
-            cd /opt/apps/taskflow-api
-            docker compose pull
-            docker compose up -d --force-recreate
-            docker logs --tail 20 taskflow-api
-            
-            # Frontend
-            cd /opt/apps/taskflow-web
-            docker compose pull
-            docker compose up -d --force-recreate
-            docker logs --tail 20 taskflow-web
-            
-            # Limpieza
-            docker image prune -f
-            
-            echo "✅ Despliegue completado"
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@master
+      with:
+       host: ${{ secrets.VPS_HOST }}
+       username: ${{ secrets.VPS_USER }}
+       password: ${{ secrets.VPS_PASSWORD }} # ✅ Cambio crucial: de 'key' a 'password'
+       port: ${{ secrets.VPS_SSH_PORT }}
+       script: |
+        echo "🚀 Iniciando despliegue..."
+        
+        # Backend
+        cd /opt/apps/taskflow-api
+        docker compose pull
+        docker compose up -d --force-recreate
+        docker logs --tail 20 taskflow-api
+        
+        # Frontend
+        cd /opt/apps/taskflow-web
+        docker compose pull
+        docker compose up -d --force-recreate
+        docker logs --tail 20 taskflow-web
+        
+        # Limpieza
+        docker image prune -f
+        
+        echo "✅ Despliegue completado"
