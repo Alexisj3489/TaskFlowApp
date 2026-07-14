@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://backalexis.byronrm.com';
+// URL actualizada apuntando a tu propio backend
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.coronel.byronrm.com';
 
 const api = axios.create({
   baseURL: API_URL,
