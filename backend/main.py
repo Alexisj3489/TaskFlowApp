@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
 import jwt
-from passlib.context import CryptContext
+import bcrypt  # Usamos la librería nativa para evitar bugs en Python 3.12
 
 # ========== CONFIG ==========
 DATABASE_URL = os.getenv(
@@ -82,15 +82,24 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str
 
-# ========== SECURITY ==========
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# ========== SECURITY (CORREGIDO SIN PASSLIB) ==========
 security = HTTPBearer()
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Codificar el string a bytes para encriptar de forma nativa
+    password_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    return hashed.decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    # Validar comparando los bytes de manera segura
+    password_bytes = plain_password.encode('utf-8')
+    hashed_bytes = hashed_password.encode('utf-8')
+    try:
+        return bcrypt.checkpw(password_bytes, hashed_bytes)
+    except Exception:
+        return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -160,7 +169,7 @@ async def register(user: UserRegister, db: Session = Depends(get_db)):
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Crear nuevo usuario
+    # Crear nuevo usuario con encriptación nativa corregida
     hashed_pwd = hash_password(user.password)
     new_user = User(email=user.email, hashed_password=hashed_pwd)
     db.add(new_user)
