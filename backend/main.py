@@ -2,7 +2,6 @@ import os
 from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, status
-# Aquí está la primera corrección:
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
@@ -101,7 +100,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# Aquí está la segunda corrección (en los parámetros de la función):
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> int:
     token = credentials.credentials
     try:
@@ -144,6 +142,11 @@ app.add_middleware(
 )
 
 # ========== ROUTES ==========
+
+# ¡AQUÍ ESTÁ LA SOLUCIÓN AL 404!
+@app.get("/")
+async def root():
+    return {"mensaje": "¡Bienvenido a la API de TaskFlow! El backend está funcionando perfectamente."}
 
 @app.get("/health")
 async def health_check():
