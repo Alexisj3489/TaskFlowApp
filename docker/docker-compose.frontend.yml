@@ -4,6 +4,7 @@ services:
   taskflow-web:
     build:
       context: /opt/apps/taskflow-web
+      dockerfile: Dockerfile.prod
       args:
         - VITE_API_URL=https://coronel.byronrm.com
     container_name: taskflow-web
