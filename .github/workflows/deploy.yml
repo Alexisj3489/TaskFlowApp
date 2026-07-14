@@ -75,29 +75,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Necesitamos bajar el código en el runner para poder copiar la carpeta 'docker'
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Copiar toda la carpeta "docker" desde el repositorio al VPS
+    - name: Copiar archivos de configuracion al VPS
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: ${{ secrets.VPS_SSH_PORT }}
+        source: "docker/*"
+        target: "/opt/apps/"
+
+    # 3. Entrar al VPS por SSH y levantar toda la arquitectura
     - name: Deploy to VPS
       uses: appleboy/ssh-action@master
       with:
-       host: ${{ secrets.VPS_HOST }}
-       username: ${{ secrets.VPS_USER }}
-       password: ${{ secrets.VPS_PASSWORD }} # ✅ Cambio crucial: de 'key' a 'password'
-       port: ${{ secrets.VPS_SSH_PORT }}
-       script: |
-        echo "🚀 Iniciando despliegue..."
-        
-        # Backend
-        cd /opt/apps/taskflow-api
-        docker compose pull
-        docker compose up -d --force-recreate
-        docker logs --tail 20 taskflow-api
-        
-        # Frontend
-        cd /opt/apps/taskflow-web
-        docker compose pull
-        docker compose up -d --force-recreate
-        docker logs --tail 20 taskflow-web
-        
-        # Limpieza
-        docker image prune -f
-        
-        echo "✅ Despliegue completado"
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: ${{ secrets.VPS_SSH_PORT }}
+        script: |
+          echo "🚀 Iniciando despliegue de Infraestructura..."
+          
+          # Crear las redes de Docker si no existen (el '|| true' evita errores si ya están)
+          docker network create proxy || true
+          docker network create backend || true
+          
+          # Entrar a la carpeta donde SCP acaba de subir tus archivos
+          cd /opt/apps/docker
+          
+          # Configuración de seguridad estricta obligatoria para el certificado de Traefik
+          touch acme.json
+          chmod 600 acme.json
+          
+          echo "⚙️ Levantando Infraestructura Base (Traefik, DB, Portainer)..."
+          docker compose -f docker-compose.traefik.yml up -d
+          docker compose -f docker-compose.database.yml up -d
+          docker compose -f docker-compose.portainer.yml up -d
+          
+          echo "📦 Desplegando la Aplicación (Backend y Frontend)..."
+          docker compose -f docker-compose.backend.yml pull
+          docker compose -f docker-compose.frontend.yml pull
+          
+          docker compose -f docker-compose.backend.yml up -d --force-recreate
+          docker compose -f docker-compose.frontend.yml up -d --force-recreate
+          
+          # Limpieza
+          docker image prune -f
+          
+          echo "✅ Despliegue total completado con éxito"
