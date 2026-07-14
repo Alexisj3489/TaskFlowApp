@@ -23,7 +23,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "https://coronel.byronrm.com").split(",")
 
 # ========== DATABASE ==========
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
