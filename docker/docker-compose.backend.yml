@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   taskflow-api:
-    image: ghcr.io/alexiscoronel/taskflow-api:latest
+    image: ghcr.io/alexisj3489/taskflowapp/taskflow-api:latest
     container_name: taskflow-api
     restart: unless-stopped
     environment:
