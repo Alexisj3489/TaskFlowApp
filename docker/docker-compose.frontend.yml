@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   taskflow-web:
-    image: ghcr.io/alexisj3489/taskflowapp/taskflow-web:latest
+    build:
+      context: . # Ajusta esta ruta hacia donde esté tu package.json (ej: ../frontend)
+      args:
+        - VITE_API_URL=https://api.coronel.byronrm.com
     container_name: taskflow-web
     restart: unless-stopped
     networks:

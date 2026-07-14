@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   taskflow-api:
-    image: ghcr.io/alexisj3489/taskflowapp/taskflow-api:latest
+    build: . # Ojo aquí: asume que tu Dockerfile/main.py está en la misma carpeta, o ajusta la ruta (ej: ../backend)
     container_name: taskflow-api
     restart: unless-stopped
     environment:
@@ -15,12 +15,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.taskflow-api.rule=Host(`backalexis.byronrm.com`)"
+      - "traefik.http.routers.taskflow-api.rule=Host(`api.coronel.byronrm.com`)" # ¡Tu propio subdominio!
       - "traefik.http.routers.taskflow-api.entrypoints=websecure"
       - "traefik.http.routers.taskflow-api.tls=true"
       - "traefik.http.routers.taskflow-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.taskflow-api.loadbalancer.server.port=8000"
-# Aquí borramos el depends_on
 
 networks:
   proxy:
