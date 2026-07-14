@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  taskflow-api:
-    build: . # Ojo aquí: asume que tu Dockerfile/main.py está en la misma carpeta, o ajusta la ruta (ej: ../backend)
+taskflow-api:
+    build: ./backend  # <--- Cambia el punto (.) por la ruta a tu carpeta del backend
     container_name: taskflow-api
     restart: unless-stopped
     environment:

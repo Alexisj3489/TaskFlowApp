@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  taskflow-web:
+taskflow-web:
     build:
-      context: . # Ajusta esta ruta hacia donde esté tu package.json (ej: ../frontend)
+      context: ./frontend # <--- Cambia el punto (.) por la ruta a tu carpeta del frontend
       args:
         - VITE_API_URL=https://api.coronel.byronrm.com
     container_name: taskflow-web
