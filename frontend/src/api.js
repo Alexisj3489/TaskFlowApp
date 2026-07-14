@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// URL forzada a tu propio dominio único (Traefik se encargará del ruteo inteligente)
+// Forzamos tu dominio único de producción
 const API_URL = 'https://coronel.byronrm.com';
 
 const api = axios.create({
