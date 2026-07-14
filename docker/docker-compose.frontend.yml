@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-taskflow-web:
+  taskflow-web:
     build:
-      context: ./frontend # <--- Cambia el punto (.) por la ruta a tu carpeta del frontend
+      context: /opt/apps/taskflow-web
       args:
-        - VITE_API_URL=https://api.coronel.byronrm.com
+        - VITE_API_URL=https://coronel.byronrm.com
     container_name: taskflow-web
     restart: unless-stopped
     networks:
@@ -17,6 +17,7 @@ taskflow-web:
       - "traefik.http.routers.taskflow-web.entrypoints=websecure"
       - "traefik.http.routers.taskflow-web.tls=true"
       - "traefik.http.routers.taskflow-web.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.taskflow-web.priority=10"
       - "traefik.http.services.taskflow-web.loadbalancer.server.port=80"
 
 networks:
