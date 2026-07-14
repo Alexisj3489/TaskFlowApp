@@ -1,0 +1,48 @@
+# Environment
+.env
+.env.*
+!.env.example
+!.env.production
+
+# Dependencies
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Docker
+postgres_data/
+portainer_data/
+pgadmin_data/
+acme.json
+
+# Logs
+*.log
+logs/
+
+# Build output
+dist/
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

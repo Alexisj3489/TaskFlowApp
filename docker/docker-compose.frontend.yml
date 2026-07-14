@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  taskflow-web:
+    image: ghcr.io/alexiscoronel/taskflow-web:latest
+    container_name: taskflow-web
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.taskflow-web.rule=Host(`coronel.byronrm.com`)"
+      - "traefik.http.routers.taskflow-web.entrypoints=websecure"
+      - "traefik.http.routers.taskflow-web.tls=true"
+      - "traefik.http.routers.taskflow-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.taskflow-web.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true

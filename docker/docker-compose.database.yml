@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  taskflow-postgres:
+    image: postgres:16-alpine
+    container_name: taskflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: taskflow123
+      POSTGRES_DB: taskflow
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=es_ES.UTF-8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    ports:
+      - "5432:5432"  # Solo para desarrollo local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  taskflow-pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: taskflow-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: "10"
+    networks:
+      - proxy
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.taskflow-pgadmin.rule=Host(`pgpacheco.byronrm.com`)"
+      - "traefik.http.routers.taskflow-pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.taskflow-pgadmin.tls=true"
+      - "traefik.http.routers.taskflow-pgadmin.tls.certresolver=letsencrypt"
+      - "traefik.http.services.taskflow-pgadmin.loadbalancer.server.port=80"
+    depends_on:
+      - taskflow-postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  proxy:
+    external: true
+  backend:
+    external: true

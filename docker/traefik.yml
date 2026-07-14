@@ -1,0 +1,33 @@
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          regex: "^http://(.*)$"
+          replacement: "https://$1"
+          permanent: true
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: proxy
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: admin@byronrm.com
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: web
+
+api:
+  dashboard: false
+  debug: false
+
+log:
+  level: INFO
+
+accessLog: {}
