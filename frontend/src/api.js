@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Forzamos tu dominio único de producción
-const API_URL = 'https://coronel.byronrm.com';
+// URL del backend (definida en .env.production como VITE_API_URL)
+const API_URL = import.meta.env.VITE_API_URL || 'https://backalexis.byronrm.com';
 
 const api = axios.create({
   baseURL: API_URL,

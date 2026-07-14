@@ -15,7 +15,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.taskflow-api.rule=Host(`coronel.byronrm.com`) && (PathPrefix(`/auth`) || PathPrefix(`/tasks`) || Path(`/health`) || Path(`/`))"
+      - "traefik.http.routers.taskflow-api.rule=Host(`backalexis.byronrm.com`)"
       - "traefik.http.routers.taskflow-api.entrypoints=websecure"
       - "traefik.http.routers.taskflow-api.tls=true"
       - "traefik.http.routers.taskflow-api.tls.certresolver=letsencrypt"

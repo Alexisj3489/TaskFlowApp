@@ -20,8 +20,12 @@ SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Forzamos tu dominio único de producción para evitar fallos de CORS
-CORS_ORIGINS = ["https://coronel.byronrm.com"]
+# Orígenes permitidos para CORS (se leen de la variable de entorno CORS_ORIGINS,
+# separados por coma). Si no está definida, cae por defecto al dominio del frontend.
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "https://coronel.byronrm.com").split(",")
+]
 
 # ========== DATABASE ==========
 engine = create_engine(DATABASE_URL)
