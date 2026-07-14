@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   taskflow-web:
-    image: ghcr.io/alexisj3489/taskflowapp/taskflow-web:latest
+    image: ghcr.io/alexisj3489/taskflowapp/taskflow-web
     container_name: taskflow-web
     restart: unless-stopped
     networks:
