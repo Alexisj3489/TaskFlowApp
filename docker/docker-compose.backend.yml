@@ -20,8 +20,7 @@ services:
       - "traefik.http.routers.taskflow-api.tls=true"
       - "traefik.http.routers.taskflow-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.taskflow-api.loadbalancer.server.port=8000"
-    depends_on:
-      - taskflow-postgres
+# Aquí borramos el depends_on
 
 networks:
   proxy:
