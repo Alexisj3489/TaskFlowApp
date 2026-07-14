@@ -1,21 +1,21 @@
 version: '3.8'
 
 services:
-taskflow-api:
-    build: ./backend  # <--- Cambia el punto (.) por la ruta a tu carpeta del backend
+  taskflow-api:
+    build: ./backend
     container_name: taskflow-api
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://taskflow:taskflow123@taskflow-postgres:5432/taskflow
-      SECRET_KEY: your-secret-key-change-in-production
-      CORS_ORIGINS: https://coronel.byronrm.com
+      DATABASE_URL: "postgresql://taskflow:taskflow123@taskflow-postgres:5432/taskflow"
+      SECRET_KEY: "your-secret-key-change-in-production"
+      CORS_ORIGINS: "https://coronel.byronrm.com"
     networks:
       - proxy
       - backend
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.taskflow-api.rule=Host(`api.coronel.byronrm.com`)" # ¡Tu propio subdominio!
+      - "traefik.http.routers.taskflow-api.rule=Host(`coronel.byronrm.com`) && (PathPrefix(`/auth`) || PathPrefix(`/tasks`) || Path(`/health`) || Path(`/`))"
       - "traefik.http.routers.taskflow-api.entrypoints=websecure"
       - "traefik.http.routers.taskflow-api.tls=true"
       - "traefik.http.routers.taskflow-api.tls.certresolver=letsencrypt"
